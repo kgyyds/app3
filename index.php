@@ -15,6 +15,7 @@ $newsList = $stmt->fetchAll();
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+<div class="scanline"></div>
 <header class="top-nav">
     <div class="brand">[<?= e($site_name) ?>]</div>
     <div class="actions">

@@ -73,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+<div class="scanline"></div>
 <header class="top-nav">
     <div class="brand">[发布新闻]</div>
     <a class="btn" href="/index.php">返回首页</a>
@@ -95,5 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button class="btn" type="submit">提交审核</button>
     </form>
 </main>
+<script src="/js/main.js"></script>
 </body>
 </html>

@@ -22,6 +22,7 @@ $visits = $visitStmt->fetchAll();
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+<div class="scanline"></div>
 <header class="top-nav">
     <div class="brand admin-highlight">[管理员后台]</div>
     <div class="actions">
@@ -49,5 +50,6 @@ $visits = $visitStmt->fetchAll();
         </table>
     </div>
 </main>
+<script src="/js/main.js"></script>
 </body>
 </html>

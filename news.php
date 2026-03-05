@@ -31,6 +31,7 @@ $comments = $cStmt->fetchAll();
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+<div class="scanline"></div>
 <header class="top-nav">
     <div class="brand">[新闻详情]</div>
     <a class="btn" href="/index.php">返回</a>
@@ -57,9 +58,9 @@ $comments = $cStmt->fetchAll();
 
     <section>
         <?php foreach ($comments as $c): ?>
-            <article class="card comment <?= (int) $c['is_admin'] === 1 ? 'admin-comment' : '' ?>">
+            <article class="card comment message-item <?= (int) $c['is_admin'] === 1 ? 'admin-comment' : '' ?>">
                 <div class="comment-header">
-                    <span class="comment-name"><?= (int) $c['is_admin'] === 1 ? 'Administration' : e($c['author']) ?></span>
+                    <span class="comment-name"><?= e($c['author']) ?><?php if ((int) $c['is_admin'] === 1): ?><span class="admin-tag">（管理员）</span><?php endif; ?></span>
                     <span class="comment-time"><?= e($c['created_at']) ?></span>
                 </div>
                 <p><?= nl2br(e($c['content'])) ?></p>

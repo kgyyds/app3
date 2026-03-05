@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+<div class="scanline"></div>
 <main class="container">
     <h1 class="title">管理员登录</h1>
     <?php if ($error): ?><div class="alert error"><?= e($error) ?></div><?php endif; ?>
@@ -32,5 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button class="btn admin" type="submit">登录后台</button>
     </form>
 </main>
+<script src="/js/main.js"></script>
 </body>
 </html>
