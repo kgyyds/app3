@@ -20,40 +20,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = '输入内容超出长度限制。';
     }
 
-    if (!empty($_FILES['image']['name'])) {
+    if (isset($_FILES['images']) && is_array($_FILES['images']['name'])) {
         global $allowed_image_ext, $max_upload_size, $upload_url_prefix;
         ensure_upload_dir();
 
-        $file = $_FILES['image'];
-        if ($file['error'] !== UPLOAD_ERR_OK) {
-            $errors[] = '图片上传失败。';
-        } elseif ($file['size'] > $max_upload_size) {
-            $errors[] = '图片大小不能超过 5MB。';
-        } else {
-            $original = $file['name'];
+        $allowedMime = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+        foreach ($_FILES['images']['name'] as $i => $original) {
+            if ($original === '') {
+                continue;
+            }
+
+            $errorCode = (int) ($_FILES['images']['error'][$i] ?? UPLOAD_ERR_NO_FILE);
+            $size = (int) ($_FILES['images']['size'][$i] ?? 0);
+            $tmpName = $_FILES['images']['tmp_name'][$i] ?? '';
+
+            if ($errorCode !== UPLOAD_ERR_OK) {
+                $errors[] = '图片上传失败：' . $original;
+                continue;
+            }
+
+            if ($size > $max_upload_size) {
+                $errors[] = '图片大小不能超过 5MB：' . $original;
+                continue;
+            }
+
             $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
             if (!in_array($ext, $allowed_image_ext, true)) {
-                $errors[] = '仅支持 jpg/jpeg/png/webp/gif 图片。';
-            } else {
-                $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                $mime = finfo_file($finfo, $file['tmp_name']);
-                finfo_close($finfo);
-                $allowedMime = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-                if (!in_array($mime, $allowedMime, true)) {
-                    $errors[] = '非法图片文件。';
-                } else {
-                    $safeName = date('YmdHis') . '_' . bin2hex(random_bytes(8)) . '.' . $ext;
-                    $target = $upload_dir . $safeName;
-                    if (!str_starts_with(realpath(dirname($target)) ?: '', realpath($upload_dir) ?: '')) {
-                        $errors[] = '上传路径异常。';
-                    } elseif (!move_uploaded_file($file['tmp_name'], $target)) {
-                        $errors[] = '保存图片失败。';
-                    } else {
-                        $content .= "\n\n![上传图片](" . $upload_url_prefix . $safeName . ')';
-                    }
-                }
+                $errors[] = '仅支持 jpg/jpeg/png/webp/gif 图片：' . $original;
+                continue;
             }
+
+            $mime = finfo_file($finfo, $tmpName);
+            if (!in_array($mime, $allowedMime, true)) {
+                $errors[] = '非法图片文件：' . $original;
+                continue;
+            }
+
+            $safeName = date('YmdHis') . '_' . bin2hex(random_bytes(8)) . '.' . $ext;
+            $target = $upload_dir . $safeName;
+            if (!str_starts_with(realpath(dirname($target)) ?: '', realpath($upload_dir) ?: '')) {
+                $errors[] = '上传路径异常：' . $original;
+                continue;
+            }
+
+            if (!move_uploaded_file($tmpName, $target)) {
+                $errors[] = '保存图片失败：' . $original;
+                continue;
+            }
+
+            $content .= "\n\n![上传图片](" . $upload_url_prefix . $safeName . ')';
         }
+
+        finfo_close($finfo);
     }
 
     if (!$errors) {
@@ -92,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label>副标题<input name="subtitle" maxlength="255"></label>
         <label>作者<input name="author" maxlength="100" placeholder="匿名"></label>
         <label>内容（Markdown）<textarea name="content" rows="10" required></textarea></label>
-        <label>上传图片（可选）<input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+        <label>上传图片（可多选）<input type="file" name="images[]" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label>
         <button class="btn" type="submit">提交审核</button>
     </form>
 </main>
