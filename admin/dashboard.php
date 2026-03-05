@@ -34,6 +34,7 @@ if (isset($_GET['logout'])) {
             <li><a class="admin-menu-link" href="/admin/visits.php">访问记录</a></li>
             <li><a class="admin-menu-link" href="/admin/review.php">新闻审核</a></li>
             <li><a class="admin-menu-link" href="/admin/edit.php">新闻修改</a></li>
+            <li><a class="admin-menu-link" href="/admin/comments.php">评论管理</a></li>
         </ul>
     </div>
 </main>
