@@ -58,7 +58,10 @@ $comments = $cStmt->fetchAll();
     <section>
         <?php foreach ($comments as $c): ?>
             <article class="card comment <?= (int) $c['is_admin'] === 1 ? 'admin-comment' : '' ?>">
-                <p class="meta"><?= (int) $c['is_admin'] === 1 ? '[管理员]' : '[用户]' ?> <?= e($c['author']) ?> · <?= e($c['created_at']) ?></p>
+                <div class="comment-header">
+                    <span class="comment-name"><?= (int) $c['is_admin'] === 1 ? 'Administration' : e($c['author']) ?></span>
+                    <span class="comment-time"><?= e($c['created_at']) ?></span>
+                </div>
                 <p><?= nl2br(e($c['content'])) ?></p>
             </article>
         <?php endforeach; ?>
