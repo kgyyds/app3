@@ -28,7 +28,7 @@ $comments = $cStmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($news['title']) ?></title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?v=<?=time()?>">
 </head>
 <body>
 <div class="scanline"></div>
